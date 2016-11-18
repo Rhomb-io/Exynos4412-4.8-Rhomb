@@ -1,11 +1,17 @@
 /*
- * Common definition for Hardkernel's Exynos4412 based ODROID-X/X2/U2/U3 boards
- * device tree source
+ * Rhomb Exynos4412 based device tree source
  *
+ * Copyright (c) 2016 Imasd tecnologia and Arturo Sapiña <asapina@imasdtecnologia.com>
+ *
+ * Device tree basic source file for Rhomb boards based
+ * on Samsung's Exynos4412 SoC. File based on Hardkernel ODROID generic dts
+ * by Dongjin Kim <tobetter@gmail.com>
+ * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.
 */
+
 
 #include <dt-bindings/sound/samsung-i2s.h>
 #include <dt-bindings/input/input.h>
@@ -23,22 +29,6 @@
 	firmware@0204F000 {
 		compatible = "samsung,secure-firmware";
 		reg = <0x0204F000 0x1000>;
-	};
-
-	gpio_keys {
-		compatible = "gpio-keys";
-		pinctrl-names = "default";
-		pinctrl-0 = <&gpio_power_key>;
-
-		power_key {
-			interrupt-parent = <&gpx1>;
-			interrupts = <3 0>;
-			gpios = <&gpx1 3 GPIO_ACTIVE_LOW>;
-			linux,code = <KEY_POWER>;
-			label = "power key";
-			debounce-interval = <10>;
-			wakeup-source;
-		};
 	};
 
 	hsotg@12480000 {
@@ -60,44 +50,6 @@
 			regulator-boot-on;
 		};
 
-		reg_p3v3: regulator@1 {
-			compatible = "regulator-fixed";
-			reg = <0x1>;
-			regulator-name = "p3v3";
-			regulator-min-microvolt = <3300000>;
-			regulator-max-microvolt = <3300000>;
-			gpio = <&gpa1 1 GPIO_ACTIVE_LOW>;
-			enable-active-high;
-			regulator-always-on;
-		};
-	};
-
-	sound: sound {
-		compatible = "simple-audio-card";
-		assigned-clocks = <&clock_audss EXYNOS_MOUT_AUDSS>,
-				<&clock_audss EXYNOS_MOUT_I2S>,
-				<&clock_audss EXYNOS_DOUT_SRP>,
-				<&clock_audss EXYNOS_DOUT_AUD_BUS>;
-		assigned-clock-parents = <&clock CLK_FOUT_EPLL>,
-				<&clock_audss EXYNOS_MOUT_AUDSS>;
-		assigned-clock-rates = <0>,
-				<0>,
-				<192000000>,
-				<19200000>;
-
-		simple-audio-card,format = "i2s";
-		simple-audio-card,bitclock-master = <&link0_codec>;
-		simple-audio-card,frame-master = <&link0_codec>;
-
-		simple-audio-card,cpu {
-			sound-dai = <&i2s0 0>;
-			system-clock-frequency = <19200000>;
-		};
-
-		link0_codec: simple-audio-card,codec {
-			sound-dai = <&max98090>;
-			clocks = <&i2s0 CLK_I2S_CDCLK>;
-		};
 	};
 
 	emmc_pwrseq: pwrseq {
@@ -108,7 +60,7 @@
 	};
 
 	camera {
-		status = "okay";
+		status = "disabled";
 		pinctrl-names = "default";
 		pinctrl-0 = <>;
 	};
@@ -265,7 +217,7 @@
 };
 
 &fimc_0 {
-	status = "okay";
+	status = "disabled";
 	assigned-clocks = <&clock CLK_MOUT_FIMC0>,
 			<&clock CLK_SCLK_FIMC0>;
 	assigned-clock-parents = <&clock CLK_MOUT_MPLL_USER_T>;
@@ -273,7 +225,7 @@
 };
 
 &fimc_1 {
-	status = "okay";
+	status = "disabled";
 	assigned-clocks = <&clock CLK_MOUT_FIMC1>,
 			<&clock CLK_SCLK_FIMC1>;
 	assigned-clock-parents = <&clock CLK_MOUT_MPLL_USER_T>;
@@ -281,7 +233,7 @@
 };
 
 &fimc_2 {
-	status = "okay";
+	status = "disabled";
 	assigned-clocks = <&clock CLK_MOUT_FIMC2>,
 			<&clock CLK_SCLK_FIMC2>;
 	assigned-clock-parents = <&clock CLK_MOUT_MPLL_USER_T>;
@@ -289,7 +241,7 @@
 };
 
 &fimc_3 {
-	status = "okay";
+	status = "disabled";
 	assigned-clocks = <&clock CLK_MOUT_FIMC3>,
 			<&clock CLK_SCLK_FIMC3>;
 	assigned-clock-parents = <&clock CLK_MOUT_MPLL_USER_T>;
@@ -316,7 +268,7 @@
 	vdd-supply = <&ldo8_reg>;
 	vdd_osc-supply = <&ldo10_reg>;
 	vdd_pll-supply = <&ldo8_reg>;
-	ddc = <&i2c_2>;
+	ddc = <&i2c_1>;
 	status = "okay";
 };
 
@@ -427,10 +379,9 @@
 			};
 
 			ldo9_reg: LDO9 {
-				regulator-name = "vt_core_1.0V";
-				regulator-min-microvolt = <1000000>;
-				regulator-max-microvolt = <1000000>;
-				regulator-always-on;
+				regulator-name = "ldo09_1.8V";
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <1800000>;
 				LDO9-supply = <&buck7_reg>;
 			};
 
@@ -439,6 +390,7 @@
 				regulator-name = "vddq_mipihsi_1.8V";
 				regulator-min-microvolt = <1800000>;
 				regulator-max-microvolt = <1800000>;
+				regulator-always-on;
 				LDO10-supply = <&buck7_reg>;
 			};
 
@@ -463,7 +415,6 @@
 				regulator-name = "vddq_c2c_w_1.8V";
 				regulator-min-microvolt = <1800000>;
 				regulator-max-microvolt = <1800000>;
-				regulator-always-on;
 				regulator-boot-on;
 				LDO13-supply = <&buck7_reg>;
 			};
@@ -472,7 +423,6 @@
 				regulator-name = "vdd_abb0_abb2_1.8V";
 				regulator-min-microvolt = <1800000>;
 				regulator-max-microvolt = <1800000>;
-				regulator-always-on;
 				regulator-boot-on;
 				LDO14-supply = <&buck7_reg>;
 			};
@@ -496,8 +446,8 @@
 			};
 
 			ldo17_reg: LDO17 {
-				regulator-name = "vddq_cam_1.8V";
-				regulator-min-microvolt = <1800000>;
+				regulator-name = "ldo17_1.2V";
+				regulator-min-microvolt = <1200000>;
 				regulator-max-microvolt = <1800000>;
 				LDO17-supply = <&buck7_reg>;
 			};
@@ -511,7 +461,7 @@
 			};
 
 			ldo19_reg: LDO19 {
-				regulator-name = "vt_cam_1.8V";
+				regulator-name = "ldo19_1.8V";
 				regulator-min-microvolt = <1800000>;
 				regulator-max-microvolt = <1800000>;
 				LDO19-supply = <&buck7_reg>;
@@ -536,42 +486,39 @@
 			};
 
 			ldo22_reg: LDO22 {
-				/*
-				 * Only U3 uses it, so let it define the
-				 * constraints
-				 */
-				regulator-name = "LDO22";
+				regulator-name = "ldo22_2.8V";
+				regulator-min-microvolt = <2800000>;
+				regulator-max-microvolt = <2800000>;
 				regulator-boot-on;
 				LDO22-supply = <&reg_sysvdd>;
 			};
 
 			ldo23_reg: LDO23 {
-				regulator-name = "vdd_touch_2.8V";
-				regulator-min-microvolt = <2800000>;
-				regulator-max-microvolt = <2800000>;
+				regulator-name = "ldo23_3V";
+				regulator-min-microvolt = <3000000>;
+				regulator-max-microvolt = <3000000>;
 				LDO23-supply = <&reg_sysvdd>;
 			};
 
 			ldo24_reg: LDO24 {
-				regulator-name = "vdd_touchled_3.3V";
-				regulator-min-microvolt = <3300000>;
-				regulator-max-microvolt = <3300000>;
-				LDO24-supply = <&reg_sysvdd>;
+				regulator-name = "ldo24_3V";
+				regulator-min-microvolt = <3000000>;
+				regulator-max-microvolt = <3000000>;
+				LDO23-supply = <&reg_sysvdd>;
 			};
 
 			ldo25_reg: LDO25 {
-				regulator-name = "vddq_lcd_1.8V";
-				regulator-min-microvolt = <1800000>;
-				regulator-max-microvolt = <1800000>;
-				regulator-always-on;
-				regulator-boot-on;
-				LDO25-supply = <&reg_sysvdd>;
+				regulator-name = "ldo25_3V";
+				regulator-min-microvolt = <3000000>;
+				regulator-max-microvolt = <3000000>;
+				LDO23-supply = <&reg_sysvdd>;
 			};
 
 			ldo26_reg: LDO26 {
-				regulator-name = "vdd_motor_3.0V";
+				rregulator-name = "ldo26_3V";
 				regulator-min-microvolt = <3000000>;
 				regulator-max-microvolt = <3000000>;
+				LDO23-supply = <&reg_sysvdd>;
 			};
 
 			buck1_reg: BUCK1 {
@@ -642,18 +589,19 @@
 			};
 
 			buck8_reg: BUCK8 {
-				/*
-				 * Constraints set by specific board: X,
-				 * X2 and U3.
-				 */
-				regulator-name = "BUCK8_2.8V";
-				BUCK8-supply = <&reg_sysvdd &reg_p3v3>;
+				regulator-name = "buck8_3.3V";
+				regulator-min-microvolt = <3300000>;
+				regulator-max-microvolt = <3300000>;
+				regulator-boot-on;
+				regulator-always-on;
+				BUCK8-supply = <&reg_sysvdd>;
 			};
 
 			buck9_reg: BUCK9 {
-				regulator-name = "io_1.2V";
-				regulator-min-microvolt = <1200000>;
-				regulator-max-microvolt = <1200000>;
+				regulator-name = "buck9_3.3V";
+				regulator-min-microvolt = <3300000>;
+				regulator-max-microvolt = <3300000>;
+				regulator-boot-on;
 				regulator-always-on;
 				BUCK9-supply = <&reg_sysvdd>;
 			};
@@ -667,16 +615,6 @@
 	samsung,i2c-slave-addr = <0x10>;
 	samsung,i2c-sda-delay = <100>;
 	samsung,i2c-max-bus-freq = <400000>;
-
-	max98090: max98090@10 {
-		compatible = "maxim,max98090";
-		reg = <0x10>;
-		interrupt-parent = <&gpx0>;
-		interrupts = <0 0>;
-		clocks = <&i2s0 CLK_I2S_CDCLK>;
-		clock-names = "mclk";
-		#sound-dai-cells = <0>;
-	};
 };
 
 &i2c_2 {
@@ -687,14 +625,8 @@
 	status = "okay";
 };
 
-&i2s0 {
-	pinctrl-0 = <&i2s0_bus>;
-	pinctrl-names = "default";
+&spi_0 {
 	status = "okay";
-	clocks = <&clock_audss EXYNOS_I2S_BUS>,
-		 <&clock_audss EXYNOS_DOUT_AUD_BUS>,
-		 <&clock_audss EXYNOS_SCLK_I2S>;
-	clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
 };
 
 &mixer {
@@ -704,7 +636,6 @@
 &mshc_0 {
 	pinctrl-0 = <&sd4_clk &sd4_cmd &sd4_bus4 &sd4_bus8>;
 	pinctrl-names = "default";
-	vmmc-supply = <&ldo20_reg>;
 	mmc-pwrseq = <&emmc_pwrseq>;
 	status = "okay";
 
@@ -740,6 +671,17 @@
 	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
 	pinctrl-names = "default";
 	vmmc-supply = <&ldo21_reg>;
+	vqmmc-supply = <&ldo4_reg>;
+	cd-gpios = <&gpk2 2 GPIO_ACTIVE_HIGH>;
+	cd-inverted;
+	status = "okay";
+};
+
+&sdhci_3 {
+	bus-width = <4>;
+	pinctrl-0 = <&sd3_clk &sd3_cmd &sd3_cd &sd3_bus4>;
+	pinctrl-names = "default";
+	vmmc-supply = <&ldo22_reg>;
 	vqmmc-supply = <&ldo4_reg>;
 	cd-gpios = <&gpk2 2 GPIO_ACTIVE_HIGH>;
 	cd-inverted;

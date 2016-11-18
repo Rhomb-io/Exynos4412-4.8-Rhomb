@@ -1,21 +1,25 @@
 /*
- * Hardkernel's Exynos4412 based ODROID-X board device tree source
+ * Rhomb Exynos4412 based device tree source
  *
- * Copyright (c) 2012 Dongjin Kim <tobetter@gmail.com>
+ * Copyright (c) 2016 Imasd tecnologia and Arturo Sapiña <asapina@imasdtecnologia.com>
  *
- * Device tree source file for Hardkernel's ODROID-X board which is based
- * on Samsung's Exynos4412 SoC.
- *
+ * Device tree source file for Rhomb expansion boards with 
+ * Samsung's Exynos4412 SoC connected. File based on Hardkernel ODROID X dts
+ * by Dongjin Kim <tobetter@gmail.com>
+ * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.
 */
 
+
 /dts-v1/;
-#include "exynos4412-odroid-common.dtsi"
+#include "exynos4412-rhomb-generic.dtsi"
+#include "exynos4412-prime.dtsi"
+#include <dt-bindings/pwm/pwm.h>
 
 / {
-	model = "Hardkernel ODROID-X board based on Exynos4412";
+	model = "Rhomb's expansion board with Exynos4412 core";
 	compatible = "hardkernel,odroid-x", "samsung,exynos4412", "samsung,exynos4";
 
 	memory {
@@ -26,20 +30,43 @@
 		compatible = "gpio-leds";
 		led1 {
 			label = "led1:heart";
-			gpios = <&gpc1 0 GPIO_ACTIVE_LOW>;
+			gpios = <&gpl2 1 GPIO_ACTIVE_LOW>;
 			default-state = "on";
 			linux,default-trigger = "heartbeat";
 		};
 		led2 {
 			label = "led2:mmc0";
-			gpios = <&gpc1 2 GPIO_ACTIVE_LOW>;
+			gpios = <&gpl2 2 GPIO_ACTIVE_LOW>;
 			default-state = "on";
 			linux,default-trigger = "mmc0";
+		};
+		led3 {
+			label = "led2:cpu";
+			gpios = <&gpl2 3 GPIO_ACTIVE_LOW>;
+			default-state = "on";
+			linux,default-trigger = "cpu";
+		};
+		led4 {
+			label = "led4:user";
+			gpios = <&gpl2 5 GPIO_ACTIVE_LOW>;
+			default-state = "off";
 		};
 	};
 
 	gpio_keys {
+		compatible = "gpio-keys";
+		pinctrl-names = "default";
 		pinctrl-0 = <&gpio_power_key &gpio_home_key>;
+
+		power_key {
+			interrupt-parent = <&gpx1>;
+			interrupts = <3 0>;
+			gpios = <&gpx1 3 GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_POWER>;
+			label = "power key";
+			debounce-interval = <10>;
+			wakeup-source;
+		};
 
 		home_key {
 			interrupt-parent = <&gpx2>;
@@ -53,26 +80,12 @@
 	};
 };
 
-/* On the Odroid-X/X2 this buck regulator supplies the core of the eMMC. */
-&buck8_reg {
-	regulator-name = "vddf_emmc_2.85V";
-	regulator-min-microvolt = <2850000>;
-	regulator-max-microvolt = <2850000>;
-};
-
-&ldo22_reg {
-	regulator-name = "ldo22_2.8V";
-	regulator-min-microvolt = <2800000>;
-	regulator-max-microvolt = <2800000>;
-	regulator-always-on;
-};
-
 &ldo23_reg {
 	regulator-name = "usb_eth";
 	regulator-min-microvolt = <3000000>;
 	regulator-max-microvolt = <3000000>;
 	regulator-always-on;
-	};
+};
 
 &ehci {
 	port@1 {
@@ -81,7 +94,13 @@
 };
 
 &mshc_0 {
-	vqmmc-supply = <&buck8_reg>;
+	vqmmc-supply = <&ldo22_reg>;
+	vmmc-supply = <&ldo13_reg>;
+};
+
+&pwm {
+	status = "okay";
+	samsung,pwm-outputs = <0>, <1>;
 };
 
 &pinctrl_1 {
