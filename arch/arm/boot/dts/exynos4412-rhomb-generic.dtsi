@@ -646,7 +646,6 @@
 	samsung,dw-mshc-sdr-timing = <2 3>;
 	samsung,dw-mshc-ddr-timing = <1 2>;
 	bus-width = <8>;
-	cap-mmc-highspeed;
 };
 
 &pd_isp {
