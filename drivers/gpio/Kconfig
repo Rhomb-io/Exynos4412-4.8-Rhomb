@@ -528,6 +528,20 @@ config GPIO_LOONGSON1
 	help
 	  Say Y or M here to support GPIO on Loongson1 SoCs.
 
+comment "Rhomb devices user GPIO support:"
+
+config USER_GPIO
+        bool "User GPIO support"
+        help
+          General-Purpose Input/Output (GPIO)
+          The GPIO peripheral provides dedicated general-purpose pins that can be configured as either inputs or
+          outputs. When configured as an output, you can write to an internal register to control the state driven on
+          the output pin. When configured as an input, you can detect the state of the input by reading the state of
+          an internal register.
+
+          Most system on a chip (SoC) devices require some general-purpose input/output (GPIO) functionality in
+          order to interact with other components in the system using low-speed interface pins. The control and use
+          of the GPIO capability on this device is grouped together in the GPIO peripheral.
 endmenu
 
 menu "Port-mapped I/O GPIO drivers"
