@@ -1,27 +1,26 @@
 /*******************************************************************************
-* Copyright (c)2017 Rhomb - All rights reserved.
-*
-* This software is authored by Rhomb and is Rhomb'
-* intelletual property,including the copyrights in all countries in the world.
-* This software is provided under a license to use only with all other rights,
-* including ownership rights, being retained by Rhomb.
-*
-* This file may not be distributed, copied or reproduced in any manner,
-* electronic or otherwise, without the written consent of Rhomb.
-*
-* This file contains declaration of APIs used in kernel space GPIO driver.
-*******************************************************************************/
+ * Copyright (c)2017 Rhomb - All rights reserved.
+ *
+ * This software is authored by Rhomb and is Rhomb'
+ * intelletual property,including the copyrights in all countries in the world.
+ * This software is provided under a license to use only with all other rights,
+ * including ownership rights, being retained by Rhomb.
+ *
+ * This file may not be distributed, copied or reproduced in any manner,
+ * electronic or otherwise, without the written consent of Rhomb.
+ *
+ * This file contains declaration of APIs used in kernel space GPIO driver.
+ *******************************************************************************/
 
 /******************************************************************************
-*
-* File Name   :  user_gpio.h
-*
-* Description :  This is a C source code header file for gpio driver for
-*                LU600 IMX6Q based core card.
-*
-* History     :  April/21/2017, Android Linux Media, Created the file.
-*
-*******************************************************************************/
+ *
+ * File Name   :  user_gpio.h
+ *
+ * Description :  This is a C source code header file for gpio driver.
+ *
+ * History     :  April/21/2017, Android Linux Media, Created the file.
+ *
+ *******************************************************************************/
 
 #ifndef _USER_GPIO_H
 #define _USER_GPIO_H
@@ -88,11 +87,11 @@ static int gpio_open(struct inode *inode, struct file *filp);
 
 /* This is a stub function as of now */
 static ssize_t gpio_read(struct file *filp, char *buff, size_t count,
-                         loff_t *f_pos );
+		loff_t *f_pos );
 
 /* This function implements the various features of gpio controller */
 static long gpio_ioctl(struct file *flip,
-                      unsigned int cmd, unsigned long arg);
+		unsigned int cmd, unsigned long arg);
 
 /* This function initializes the gpio controller */
 static int __init gpio_init(void);
@@ -104,13 +103,13 @@ static void  __exit gpio_exit(void);
 
 
 /*******************************************************************************
-* Copyright (c)2017 Rhomb - All rights reserved.
-*
-* This software is authored by Rhomb and is Rhomb'
-* intelletual property,including the copyrights in all countries in the world.
-* This software is provided under a license to use only with all other rights,
-* including ownership rights, being retained by Rhomb.
-*
-* This file may not be distributed, copied or reproduced in any manner,
-* electronic or otherwise, without the written consent of Rhomb.
+ * Copyright (c)2017 Rhomb - All rights reserved.
+ *
+ * This software is authored by Rhomb and is Rhomb'
+ * intelletual property,including the copyrights in all countries in the world.
+ * This software is provided under a license to use only with all other rights,
+ * including ownership rights, being retained by Rhomb.
+ *
+ * This file may not be distributed, copied or reproduced in any manner,
+ * electronic or otherwise, without the written consent of Rhomb.
 *******************************************************************************/

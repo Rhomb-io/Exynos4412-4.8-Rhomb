@@ -1,27 +1,26 @@
 /*******************************************************************************
-* Copyright (c)2017 Rhomb - All rights reserved.
-*
-* This software is authored by Rhomb and is Rhomb'
-* intelletual property,including the copyrights in all countries in the world.
-* This software is provided under a license to use only with all other rights,
-* including ownership rights, being retained by Rhomb.
-*
-* This file may not be distributed, copied or reproduced in any manner,
-* electronic or otherwise, without the written consent of Rhomb.
-*
-* This file contains declaration of APIs used in user space GPIO driver.
-*******************************************************************************/
+ * Copyright (c)2017 Rhomb - All rights reserved.
+ *
+ * This software is authored by Rhomb and is Rhomb'
+ * intelletual property,including the copyrights in all countries in the world.
+ * This software is provided under a license to use only with all other rights,
+ * including ownership rights, being retained by Rhomb.
+ *
+ * This file may not be distributed, copied or reproduced in any manner,
+ * electronic or otherwise, without the written consent of Rhomb.
+ *
+ * This file contains declaration of APIs used in user space GPIO driver.
+ *******************************************************************************/
 
 /******************************************************************************
-*
-* File Name   :  user_gpio_app.h
-*
-* Description :  This is a C source code header file for gpio driver for
-*                LU600 IMX6Q based core card.
-*
-* History     :  April/24/2017, Android Linux Media, Created the file.
-*
-*******************************************************************************/
+ *
+ * File Name   :  user_gpio_app.h
+ *
+ * Description :  This is a C source code header file for gpio driver.
+ *
+ * History     :  April/24/2017, Android Linux Media, Created the file.
+ *
+ *******************************************************************************/
 
 #ifndef _USER_GPIO_APP_H
 #define _USER_GPIO_APP_H
@@ -53,21 +52,21 @@
  *********************************/
 typedef struct _gpio_arg
 {
-   unsigned int   gpio;
-   unsigned char  value;
+	unsigned int   gpio;
+	unsigned char  value;
 }gpio_arg_t;
 
 #endif
 
 
 /*******************************************************************************
-* Copyright (c)2017 Rhomb - All rights reserved.
-*
-* This software is authored by Rhomb and is Rhomb'
-* intelletual property,including the copyrights in all countries in the world.
-* This software is provided under a license to use only with all other rights,
-* including ownership rights, being retained by Rhomb.
-*
-* This file may not be distributed, copied or reproduced in any manner,
-* electronic or otherwise, without the written consent of Rhomb.
-*******************************************************************************/
+ * Copyright (c)2017 Rhomb - All rights reserved.
+ *
+ * This software is authored by Rhomb and is Rhomb'
+ * intelletual property,including the copyrights in all countries in the world.
+ * This software is provided under a license to use only with all other rights,
+ * including ownership rights, being retained by Rhomb.
+ *
+ * This file may not be distributed, copied or reproduced in any manner,
+ * electronic or otherwise, without the written consent of Rhomb.
+ *******************************************************************************/
