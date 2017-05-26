@@ -57,6 +57,7 @@
 			opp-microvolt = <1037500>;
 			clock-latency-ns = <200000>;
 		};
+/*
 		opp09 {
 			opp-hz = /bits/ 64 <1100000000>;
 			opp-microvolt = <1075000>;
@@ -98,6 +99,7 @@
 			clock-latency-ns = <200000>;
 			turbo-mode;
 		};
+*/
 	};
 
 	bus_dmc_opp_prime_table: opp_prime_table1 {
