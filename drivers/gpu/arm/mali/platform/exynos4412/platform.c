@@ -144,7 +144,7 @@ static int exynos4412_regulator_enable(struct platform_device *device)
 	const unsigned int default_gpu_vol = 1125000; /* 1.1125 V */
 
 	struct device *dev = &device->dev;
-	g3d_regulator = regulator_get(dev, "gpu");
+	g3d_regulator = regulator_get(dev, "vdd_g3d");
 
 	if (IS_ERR(g3d_regulator)) {
 		MALI_PRINT_ERROR(("Mali platform: failed to get g3d regulator\n"));
