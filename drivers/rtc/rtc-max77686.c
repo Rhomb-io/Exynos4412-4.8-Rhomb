@@ -22,6 +22,8 @@
 #include <linux/mfd/max77686-private.h>
 #include <linux/irqdomain.h>
 #include <linux/regmap.h>
+#include <linux/io.h>
+#include <asm/system_misc.h>
 
 #define MAX77686_I2C_ADDR_RTC		(0x0C >> 1)
 #define MAX77620_I2C_ADDR_RTC		0x68
@@ -49,6 +51,8 @@
 
 #define REG_RTC_NONE			0xdeadbeef
 
+#define PS_HOLD_CONTROL			0x1002330c
+#define INT_VALUE_WTSR_SMPL		0xC7
 /*
  * MAX77802 has separate register (RTCAE1) for alarm enable instead
  * using 1 bit from registers RTC{SEC,MIN,HOUR,DAY,MONTH,YEAR,DATE}
@@ -258,6 +262,8 @@ static const struct max77686_rtc_driver_data max77802_drv_data = {
 	.rtc_i2c_addr = MAX77686_INVALID_I2C_ADDR,
 	.rtc_irq_chip = &max77802_rtc_irq_chip,
 };
+
+static struct max77686_rtc_info *rtc_info;
 
 static void max77686_rtc_data_to_tm(u8 *data, struct rtc_time *tm,
 				    struct max77686_rtc_info *info)
@@ -635,6 +641,27 @@ static irqreturn_t max77686_rtc_alarm_irq(int irq, void *data)
 	return IRQ_HANDLED;
 }
 
+static void max77686_rtc_restart(enum reboot_mode reboot_mode, const char *cmd)
+{
+	static void __iomem *ps_hold_register;
+	unsigned int data, register_value ;
+	int ret;
+
+	ps_hold_register = ioremap(PS_HOLD_CONTROL, 0x4);
+	ret = max77686_rtc_update(rtc_info, MAX77686_RTC_READ);
+
+	ret = regmap_read(rtc_info->rtc_regmap,
+			       rtc_info->drv_data->rtc_irq_chip->status_base,
+			       &data);
+	if (ret < 0) {
+		dev_err(rtc_info->dev, "Fail to read time reg(%d)\n", ret);
+	}
+	register_value = readl(ps_hold_register);
+	register_value = register_value & ~BIT(8);
+	writel(register_value, ps_hold_register);
+	iounmap(ps_hold_register);
+}
+
 static const struct rtc_class_ops max77686_rtc_ops = {
 	.read_time = max77686_rtc_read_time,
 	.set_time = max77686_rtc_set_time,
@@ -661,8 +688,17 @@ static int max77686_rtc_init_reg(struct max77686_rtc_info *info)
 		dev_err(info->dev, "Fail to write controlm reg(%d)\n", ret);
 		return ret;
 	}
-
 	ret = max77686_rtc_update(info, MAX77686_RTC_WRITE);
+
+	ret = regmap_write(info->rtc_regmap,
+				info->drv_data->map[REG_WTSR_SMPL_CNTL],
+				INT_VALUE_WTSR_SMPL);
+	if (ret < 0) {
+		dev_err(info->dev, "Fail to write controlm reg(%d)\n", ret);
+		return ret;
+	}
+	ret = max77686_rtc_update(info, MAX77686_RTC_WRITE);
+
 	return ret;
 }
 
@@ -789,7 +825,8 @@ static int max77686_rtc_probe(struct platform_device *pdev)
 			info->virq, ret);
 		goto err_rtc;
 	}
-
+	rtc_info = info;
+	arm_pm_restart = max77686_rtc_restart;
 	return 0;
 
 err_rtc:
