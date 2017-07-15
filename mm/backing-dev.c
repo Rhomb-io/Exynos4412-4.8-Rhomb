@@ -124,8 +124,8 @@ static void bdi_debug_register(struct backing_dev_info *bdi, const char *name)
 
 static void bdi_debug_unregister(struct backing_dev_info *bdi)
 {
-	debugfs_remove(bdi->debug_stats);
-	debugfs_remove(bdi->debug_dir);
+	//debugfs_remove(bdi->debug_stats);
+	//debugfs_remove(bdi->debug_dir);
 }
 #else
 static inline void bdi_debug_init(void)

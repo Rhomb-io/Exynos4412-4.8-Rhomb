@@ -24,6 +24,7 @@
 #include <linux/regmap.h>
 #include <linux/io.h>
 #include <asm/system_misc.h>
+#include <linux/pm.h>
 
 #define MAX77686_I2C_ADDR_RTC		(0x0C >> 1)
 #define MAX77620_I2C_ADDR_RTC		0x68
@@ -52,7 +53,8 @@
 #define REG_RTC_NONE			0xdeadbeef
 
 #define PS_HOLD_CONTROL			0x1002330c
-#define INT_VALUE_WTSR_SMPL		0xC7
+#define INT_VALUE_WTSR_SMPL		0x07
+#define ENABLE_SMPL_WTSR		0xC7
 /*
  * MAX77802 has separate register (RTCAE1) for alarm enable instead
  * using 1 bit from registers RTC{SEC,MIN,HOUR,DAY,MONTH,YEAR,DATE}
@@ -641,11 +643,31 @@ static irqreturn_t max77686_rtc_alarm_irq(int irq, void *data)
 	return IRQ_HANDLED;
 }
 
+static void max77686_rtc_poweroff(void)
+{
+	static void __iomem *ps_hold_register;
+	unsigned int register_value;
+	ps_hold_register = ioremap(PS_HOLD_CONTROL, 0x4);
+	register_value = readl(ps_hold_register);
+	register_value = register_value & ~BIT(8);
+	writel(register_value, ps_hold_register);
+	iounmap(ps_hold_register);
+}
+
 static void max77686_rtc_restart(enum reboot_mode reboot_mode, const char *cmd)
 {
 	static void __iomem *ps_hold_register;
 	unsigned int data, register_value ;
 	int ret;
+
+	ret = regmap_write(rtc_info->rtc_regmap,
+				rtc_info->drv_data->map[REG_WTSR_SMPL_CNTL],
+				ENABLE_SMPL_WTSR);
+	if (ret < 0) {
+		dev_err(rtc_info->dev, "Fail to write controlm reg(%d)\n", ret);
+		return;
+	}
+	ret = max77686_rtc_update(rtc_info, MAX77686_RTC_WRITE);
 
 	ps_hold_register = ioremap(PS_HOLD_CONTROL, 0x4);
 	ret = max77686_rtc_update(rtc_info, MAX77686_RTC_READ);
@@ -827,6 +849,7 @@ static int max77686_rtc_probe(struct platform_device *pdev)
 	}
 	rtc_info = info;
 	arm_pm_restart = max77686_rtc_restart;
+	pm_power_off = max77686_rtc_poweroff;
 	return 0;
 
 err_rtc:
