@@ -57,7 +57,6 @@
 			opp-microvolt = <1037500>;
 			clock-latency-ns = <200000>;
 		};
-/*
 		opp09 {
 			opp-hz = /bits/ 64 <1100000000>;
 			opp-microvolt = <1075000>;
@@ -78,6 +77,7 @@
 			opp-microvolt = <1225000>;
 			clock-latency-ns = <200000>;
 		};
+/*
 		opp13 {
 			opp-hz = /bits/ 64 <1500000000>;
 			opp-microvolt = <1300000>;
