@@ -846,9 +846,10 @@
 
 			buck4_reg: BUCK4 {
 				regulator-name = "vdd_g3d";
-				regulator-min-microvolt = <850000>;
-				regulator-max-microvolt = <1150000>;
-				regulator-boot-on;
+				regulator-min-microvolt = <1125000>;
+				regulator-max-microvolt = <1200000>;
+				regulator-always-on;
+				/*regulator-boot-on;*/
 				regulator-state-mem {
 					regulator-off-in-suspend;
 				};
